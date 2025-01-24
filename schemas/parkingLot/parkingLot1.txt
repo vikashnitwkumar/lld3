@@ -1,0 +1,183 @@
+
+class ParkingLot{
+    Attributes:
+        id : int;
+        name : String;
+        address: String;
+        floors : List<Floor>;
+        entryGates : List<Gate>;
+        exitGates: List<Gate>;
+        supportedVehicleTypes : List<VehicleType>;
+        parkingLotStatus : ParkingLotStatus;
+        slotAssignmentStrategies: SlotAssignmentStrategies;
+    Methods:
+        getParkingSpot(vehicleType: VehicleType): ParkingSpot
+        generateTikcet(vehicle: Vehicle, gate: Gate):Ticket
+        makePayment(bill: Bill):Payment
+        showAvailableParkingSpot(vehicleType: VehicleType): List<ParkingSpot>;
+        getBillAmountCalculator(vehicleType: VehicleType) : BillAmountCalculator
+        calculateBillAmount(entryTime: Date, exitTime: Date): double
+        updateParkingLotStatus(parkingLotStatus: ParkingLotStatus): void
+}
+enum ParkingLotStatus{
+    OPEN, CLOSED, FILLED, UNDER_MAINTAINANCE
+}
+class Floor{
+    Attributes:
+        floorNumber: String;
+        parkingLot: ParkingLot;
+        spots : List<ParkingSpot>;
+        supportedVehicleTypes: List<VehicleType>;
+        floorStatus: FloorStatus;
+    Methods:
+        getParkingSpot(): List<ParkingSpot>;
+        updateFloorStatus(floorStatus: FloorStatus):void
+}
+
+enum FloorStatus{
+FULL, EMPTY, UNDER_MAINTAINACE
+}
+
+class ParkingSpot{
+    Attributes:
+        spotNumber: String;
+        spotTypes : VehicleType;
+        floor: Floor;
+        status: ParkingSpotStatus;
+
+    Methods:
+        updateParkingSpotStatus(parkingSpotStatus: ParkingSpotStatus) : void;
+        isSpotCompatible( vehicleType: VehicleType): boolean
+}
+
+enum ParkingSpotStatus{
+    OPEN, BOOKED, NOT_AVAILABLE
+}
+class Gate{
+    gateNumber: String
+    operator: Operator;
+    gateType: GateType;
+    parkingLot: ParkingLot;
+    gateStatus: GateStatus
+
+    Methods:
+}
+
+enum GateType{
+    ENTRY, EXIT, CLOSED
+}
+class Operator{
+    id: int;
+
+}
+
+class Ticket{
+    Attributes:
+        ticketId : int;
+        operator: Operator;
+        vehicle: Vehicle;
+        gate: Gate;
+        entryTime: Date;
+        parkingSpot: ParkingSpot;
+
+}
+
+class Vehicle{
+    ownerName : String;
+    vehicleType: VehicleType;
+    licensePlateNumber: String;
+}
+
+
+ enum VehicleType{
+    CAR, BIKE, TRUCK
+}
+
+
+
+
+class Bill{
+    exitTime: Date
+    ticket : Ticket;
+    gate: Gate
+    operator: Operator
+    payments: List<Payment>;
+    amount: double;
+    
+    Methods:
+        setOperator(ticket: Ticket): double;
+}
+
+Payment{
+    refId: String;
+    ticket: Ticket;
+    timeStamp: Date;
+    amount: double;
+    targetAccount : String; // account to which payment is made
+    paymentType: PaymentType;
+    paymentGateWay: PaymentGateway;
+    paymentStatus : PaymentStatus;
+}
+
+enum PaymentStatus{
+    FAILED, SUCCESS, PENDING
+}
+enum PaymentGateway{
+PHONE_PE, PAYTM, RAZORPAY
+}
+
+enum PaymentType{
+    CASH, NET_BANKING, UPI, COUPON, CARD
+}
+
+interface User{
+    Attributes:
+        id: int
+        name: String;
+        Username: String;
+        Password: String;
+        Email: String;
+}
+
+class Customer implements User{
+    Attributes:        
+        tickets: List<Tickets>
+        bills: List<Bill>
+        payments: List<Payments>
+        vehicles: List<Vehicle>
+}
+
+class Operator implements User{
+
+
+}
+
+interface SlotAssignmentStrategies{
+
+    assignSlot(floors: List<Floor>): ParkingSpot
+}
+
+class nearestAvailableSlotAssignmentStrategies{
+
+
+}
+
+//
+
+interface BillAmountCalculator(){
+    calculateBillAmount(entryTime : Date, exitTime: Date): double
+}
+
+class bikeBillAmountCalculator implements BillAmountCalculator{
+    calculateBillAmount(entryTime : Date, exitTime: Date): double
+}
+class carBillAmountCalculator implements BillAmountCalculator{
+    calculateBillAmount(entryTime : Date, exitTime: Date): double
+}
+class truckBillAmountCalculator implements BillAmountCalculator{
+    calculateBillAmount(entryTime : Date, exitTime: Date): double
+}
+
+class BillAmountCalculatorFactory{
+    getBillAmountCalculator(vehicleType : VehicleType): BillAmountCalculator
+}

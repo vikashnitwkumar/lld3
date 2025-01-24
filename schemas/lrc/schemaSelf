@@ -1,0 +1,43 @@
+Entities:
+    Learners;
+    Instructor;
+    Batches;
+    Lectures;
+    Dashboard;
+    BatchTimings;
+    LectureRatings;
+    App;
+Enums;
+    BatchDays:{MWF;TTS}
+
+
+
+interface User{
+    Attributes:
+        id: int;
+        name: String;
+        username: String;
+        Email: String;
+        phone: Phone;
+        userType : UserType;
+        bathces: List<Batches>;
+        currentBatch: Batch;
+        nextLecture: Lecture;
+    Methods:
+        singUp(): User
+        signIn();
+        LogOut;
+}
+
+class Phone{
+   phoneNumber: integer;
+   countryCode : CountryCode;
+}
+enum CountryCode{
+    +91;
+    +92;
+    +011;
+}
+enum UserType{
+    INSTRUCTOR, STUDENT;
+}
