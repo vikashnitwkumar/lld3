@@ -1,0 +1,148 @@
+Class Resturant{
+    Long id;
+    String address;
+    int rating;
+    int ratingCount;
+    Menu menu;
+    List<Employee> employees;
+
+    addEmployee(Employee employee) : employee
+    removeEmpoyee(long employeeId) : void
+}
+
+
+
+
+class Menu{
+    List<Item> items;
+    addItem(Item item) : Item
+    removeItem(Item item) : void
+}
+class Item{
+    int id;
+    int price;
+    Category category;
+    CuisineType cuisineType;
+    DishType dishtype;
+    List<Recipe> recipes;
+}
+
+enum DishSection{
+    BEVERGAE,
+    MAINCOURSE,
+    STARTER,
+    SOUP,
+    APPETIZERS
+}
+enum DishType{
+    VEG
+    NON-VEG
+}
+enum CuisineType{
+    ITALIAN,
+    FRENCH,
+    CHINESE,
+    JAPANESE,
+    INDIAN,
+    CONTINENTAL
+}
+
+Class Recipe{
+    String Ingredient;
+    double Quantity;
+    IngradientType ingradientType;
+    String discription;
+}
+
+enum IngradientType{
+    LIQUID,
+    SEMI_LIQUID,
+    SOLID
+}
+
+interface Employee{
+    Long id;    
+    String name; 
+    String email;
+    String phoneNumber; 
+}
+
+class Chef extends Employee{
+    ChefLevel chefLevel;
+}
+
+enum ChefLevel{
+    COMMIS_CHEF, SOUS_CHEF, HEAD_CHEF, EXECUTIVE_CHEF;
+}
+
+Class Waiter extends Employee{
+    WaiterType waiterType;
+}
+
+enum WaiterType{
+    JUNIOR,    SENIOR,    MANAGER
+}
+
+class Customer {
+    long id;
+    String name;
+    String email;
+    String phoneNumber;
+    List<Order> orders;
+    List<Payment> payments;
+    Resturant Resturant;
+}
+
+class Order{
+    Customer customer;
+    Date orderDate;
+    List<OrderItem> orderItems;
+    enum orderStatus;
+    double totalAmount;
+}
+
+enum orderStatus{
+    CONFIRMED, DELIVERED, CANCELLED, PREPARING
+}
+
+class OrderItem{
+    Item item;
+    int quantity;
+    double amount;
+}
+
+class Payment{
+    Long id;
+    Order order;
+    Customer customer;
+    double amount;
+    Date paymentDate;
+    PaymentStatus paymentStatus;
+    PaymentGateway paymentGateway;
+    PaymentType paymentType;
+}
+
+enum PaymentStatus{
+    PAID, PROCESSING,  FAILED
+}
+
+enum PaymentGateway{
+    PHONE_PE, PAYTM, RAZORPAY
+}
+
+enum PaymentType{
+    CASH, NET_BANKING, UPI, COUPON, CARD
+}
+
+
+class orderService{
+    getAllItems() : List<Item> 
+    getItemByCategory(Category category) : List<Item>
+    createOrder(List<OrderItem> orderItems) : Order
+    cancelOrder(Order order) : Order
+    makePayment(Order order, Customer customer) : Payment
+}
+
+class PaymentService{
+    makePayment(double amount, Customer customer, Order order, paymentGateway paymentGateway ) : Payment
+}
