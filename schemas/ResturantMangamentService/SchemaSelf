@@ -1,51 +1,59 @@
-Class Resturant{
+class Restaurant {
     Long id;
+    String name;
     String address;
     int rating;
     int ratingCount;
     Menu menu;
     List<Employee> employees;
-
-    addEmployee(Employee employee) : employee
-    removeEmpoyee(long employeeId) : void
+    List<Order> orders;
+    OrderService orderService;
+    PaymentService paymentService;
+    EmployeeService employeeService;
 }
 
+class EmployeeService{    
+    void addEmployee(Employee employee);
+    void removeEmployee(Long employeeId);
+}
 
-
-
-class Menu{
+class Menu {
     List<Item> items;
-    addItem(Item item) : Item
-    removeItem(Item item) : void
+    void addItem(Item item);
+    void removeItem(Long itemId);
 }
-class Item{
-    int id;
-    int price;
-    Category category;
+
+
+class Item {
+    Long id;
+    String name;
+    String description;
+    double price;
+    DishType dishType;
     CuisineType cuisineType;
-    DishType dishtype;
+    DishSection section;
     List<Recipe> recipes;
 }
 
-enum DishSection{
-    BEVERGAE,
-    MAINCOURSE,
-    STARTER,
-    SOUP,
-    APPETIZERS
+class Ingredient {
+    Long id;
+    String name;
+    IngredientType type;
+    String unit; // grams, ml
 }
-enum DishType{
-    VEG
-    NON-VEG
+
+
+class Recipe {
+    Item item;
+    Ingredient ingredient;
+    double quantity;
+    String description;
 }
-enum CuisineType{
-    ITALIAN,
-    FRENCH,
-    CHINESE,
-    JAPANESE,
-    INDIAN,
-    CONTINENTAL
-}
+
+enum DishType { VEG, NON_VEG, VEGAN }
+enum CuisineType { ITALIAN, FRENCH, CHINESE, JAPANESE, INDIAN, CONTINENTAL }
+enum DishSection { BEVERAGE, MAINCOURSE, STARTER, SOUP, APPETIZER }
+enum IngredientType { SOLID, LIQUID, SEMI_LIQUID }
 
 Class Recipe{
     String Ingredient;
@@ -60,58 +68,66 @@ enum IngradientType{
     SOLID
 }
 
-interface Employee{
-    Long id;    
-    String name; 
+interface Employee {
+    Long id;
+    String name;
     String email;
-    String phoneNumber; 
+    String phoneNumber;
 }
+
 
 class Chef extends Employee{
     ChefLevel chefLevel;
 }
 
-enum ChefLevel{
-    COMMIS_CHEF, SOUS_CHEF, HEAD_CHEF, EXECUTIVE_CHEF;
-}
+enum ChefLevel { COMMIS_CHEF, SOUS_CHEF, HEAD_CHEF, EXECUTIVE_CHEF }
 
 Class Waiter extends Employee{
     WaiterType waiterType;
 }
 
-enum WaiterType{
-    JUNIOR,    SENIOR,    MANAGER
-}
+enum WaiterType { JUNIOR, SENIOR, MANAGER }
 
 class Customer {
-    long id;
+    Long id;
     String name;
     String email;
     String phoneNumber;
-    List<Order> orders;
-    List<Payment> payments;
-    Resturant Resturant;
+    List<Visit> visits;
 }
 
-class Order{
+class Visit {
+    Long id;
     Customer customer;
+    Restaurant restaurant;
+    Date visitDate;
+    List<Order> orders;
+}
+
+
+class Order {
+    Long id;
+    Visit visit;
     Date orderDate;
     List<OrderItem> orderItems;
-    enum orderStatus;
+    OrderStatus status;
     double totalAmount;
+
+    void updateStatus(OrderStatus newStatus);
 }
 
-enum orderStatus{
-    CONFIRMED, DELIVERED, CANCELLED, PREPARING
-}
 
-class OrderItem{
+enum OrderStatus { CONFIRMED, PREPARING, DELIVERED, CANCELLED }
+
+
+class OrderItem {
     Item item;
     int quantity;
     double amount;
 }
 
-class Payment{
+
+class Payment {
     Long id;
     Order order;
     Customer customer;
@@ -122,27 +138,19 @@ class Payment{
     PaymentType paymentType;
 }
 
-enum PaymentStatus{
-    PAID, PROCESSING,  FAILED
+enum PaymentStatus { PAID, PROCESSING, FAILED }
+enum PaymentGateway { PHONE_PE, PAYTM, RAZORPAY }
+enum PaymentType { CASH, NET_BANKING, UPI, COUPON, CARD }
+
+class OrderService {
+    List<Item> getAllItems();
+    List<Item> getItemsByCategory(DishSection section);
+    Order createOrder(List<OrderItem> orderItems);
+    Order cancelOrder(Long orderId);
+    Order getOrderDetails(Long orderId);
 }
 
-enum PaymentGateway{
-    PHONE_PE, PAYTM, RAZORPAY
-}
-
-enum PaymentType{
-    CASH, NET_BANKING, UPI, COUPON, CARD
-}
-
-
-class orderService{
-    getAllItems() : List<Item> 
-    getItemByCategory(Category category) : List<Item>
-    createOrder(List<OrderItem> orderItems) : Order
-    cancelOrder(Order order) : Order
-    makePayment(Order order, Customer customer) : Payment
-}
-
-class PaymentService{
-    makePayment(double amount, Customer customer, Order order, paymentGateway paymentGateway ) : Payment
+class PaymentService {
+    Payment makePayment(double amount, Customer customer, Order order, PaymentGateway gateway);
+    Payment refundPayment(Long paymentId);
 }
