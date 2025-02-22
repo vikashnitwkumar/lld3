@@ -1,0 +1,207 @@
+//Udemy class diagram
+
+class Udemy{
+    List<Course> courses;
+    List<Instructor> instructors;
+    List<Learner> learners;
+    CourseService courseService;
+    UserService userService;
+}
+
+class Course{
+    Long id;
+    String name;
+    double price;
+    Date createdAt;
+    Date updatedAt;
+    Category category;
+    Level level;
+    List<AudioLanguage> audioLanguages;
+    List<SubtitleLanguage> subtitleLanguages;
+    List<Instructor> instructors;
+    List<Module> modules;
+    String description;
+    double rating;
+    double ratingCount; 
+    List<Review> courseReviews;   
+    double courseDuration;
+    int lectureCount;
+    int moduleCount;
+    int assignmentCount;
+    int quizCount;
+    int enrollmentCount;
+    getModules(); List<Module>
+    getCourses(); List<Course>
+}
+
+class Module{
+    Long id;
+    String name;
+    List<Lecture> lectures;
+    getCourses() : List<Course>
+}
+
+class Lecture{
+    long id;
+    String name;
+    String description;
+    String videoUrl;    
+    Module module;
+    List<AudioLanguage> audioLanguages;
+    List<SubtitleLanguage> subtitleLanguages;
+    List<Assignment> assignments;
+    List<Quiz> quizzes;
+    List<Review> lectureReviews;
+    double rating;
+    double ratingCount; 
+    double lectureDuration;  
+    Instructor instructor;  
+    int viewCount;   
+}
+
+enum AudioLanguage{ENGLISH, FRENCH, GERMAN, SPANISH}
+enum SubtitleLanguage{ENGLISH, FRENCH, GERMAN, SPANISH}
+
+interface Question{
+    long id;
+    String name;
+    String description;
+    List<Instructor> setters;
+    List<String> possibleSoLutions;
+    List<String> comments;
+    List<Review> assignmentReviews;
+    int maxScore;
+    int totalSubmissions;
+    int acceptedSubmissions;
+    Date createdDate;
+    Date updatedDate;
+    QuestionType questionType;    
+}
+class Assignment{
+    Long id;
+    Lecture lecture;
+    String name;
+    String description;
+    List<Question> questions;    
+    QuestionType questionType;
+}
+
+class Quiz{
+    Long id;
+    Lecture lecture;
+    String name;
+    String description;
+    List<Question> questions;    
+    QuestionType questionType;
+}
+
+class QuizSubmission{
+    Quiz quiz;
+    Learner submitter;
+    double currentScore;
+    Date submittedAt;
+    String Solution;
+}
+
+class AssignmentSubmission{
+    Assignment assignment;
+    Learner submitter;
+    double currentScore;
+    Date submittedAt;
+    String Solution;
+}
+
+enum AssignmentType{ASSIGNMENT, QUIZ}
+
+class user{
+    long id;
+    String name;
+    String email;
+    String password;
+    String List<Role> roles;
+}
+
+enum Role{STUDENT, ADMIN, INSTRUCTOR}
+
+class Instructor extends User{
+    List<Course> courses;
+    List<Review> instructorReviews;
+}
+
+class Learner extends User{
+    List<EnrolledCourse> enrolledCourses;
+    List<Review> learnerReviews;
+    List<AssignmentSubmission> assignmentSubmissions;
+    List<QuizSubmission> quizSubmissions;
+}
+
+class EnrolledCourse{
+    long id;
+    Course course;
+    Date joinedAt;
+    Date expiryDate;
+    List<AssignmentSubmission> assignmentSubmissions;
+    List<QuizSubmission> quizSubmissions;
+    List<Review> enrolledCourseReviews;
+    LectureView currentLecture;;
+    List<LectureView> lectureViews;
+    CourseStatus courseStatus;
+    int lectureRating //between 1 to 5
+}
+
+enum CourseStatus{NOT_STARTED, IN_PROGRESS, COMPLETED, DROPPED, EXPIRED}
+
+class LectureView{
+    long id;
+    Lecture lecture;
+    User user;
+    Date viewedAt;
+    double viewedDuration;
+    LectureProgress lectureProgress;
+}
+
+enum LectureProgress{NOT_STARTED, IN_PROGRESS, COMPLETED}
+
+class Review{
+    long id;
+    String comment;
+    double rating;
+    Learner reviewer;
+    Date createdAt;
+    Date updatedAt;
+    Lecture lecture;
+    Assignment assignment;
+    Quiz quiz;
+    Course course;
+}
+
+class CourseService{
+    List<Course> getCourses();
+    List<Instructor> getInstructors();  
+    Course getCourseById(long courseId);
+    Instructor getInstructorById(long instructorId);
+    List<Lecture> getLecturesByCourseId(long courseId);
+    List<Assignment> getAssignmentsByLectureId(long lectureId);
+    List<Quiz> getQuizzesByLectureId(long lectureId);
+    List<Question> getQuestionsByAssignmentId(long assignmentId);
+    List<Question> getQuestionsByQuizId(long quizId);
+    addCourse(Course course);
+    updateCourse(Course course);
+    removeCourse(Course course);
+    addLecture(Lecture lecture);
+    updateLecture(Lecture lecture);
+    removeLecture(Lecture lecture);
+    addAssignment(Assignment assignment);
+    updateAssignment(Assignment assignment);
+    removeAssignment(Assignment assignment);
+    addQuiz(Quiz quiz);
+    updateQuiz(Quiz quiz);
+    removeQuiz(Quiz quiz);
+}
+
+class UserService{
+    User login(String email, String password);
+    User register(String name, String email, String password);
+    addRole(User user, Role role);
+    removeRole(User user, Role role);
+}
