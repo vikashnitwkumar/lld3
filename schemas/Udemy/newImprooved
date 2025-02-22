@@ -1,0 +1,158 @@
+class UdemyPlatform {
+    List<Course> courses;
+    List<User> users;
+}
+
+class Course {
+    Long id;
+    String title;
+    String description;
+    double price;
+    Category category;
+    CourseLevel level;
+    List<Instructor> instructors;
+    List<Module> modules;
+    List<CourseReview> reviews;
+    LocalDateTime createdDate;
+    LocalDateTime updatedDate;
+    Duration totalDuration;
+    
+    // Derived attributes
+    double averageRating() { /* calculate from reviews */ }
+    int studentCount() { /* count enrollments */ }
+}
+
+class Module {
+    Long id;
+    String title;
+    int order;
+    List<Lecture> lectures;
+}
+
+class Lecture {
+    Long id;
+    String title;
+    String description;
+    Video video;
+    List<LearningMaterial> materials;
+    List<Assessment> assessments;
+    Duration duration;
+}
+
+abstract class LearningMaterial {
+    Long id;
+    String title;
+    String description;
+    LocalDateTime uploadDate;
+}
+
+class Video extends LearningMaterial {
+    String videoUrl;
+    List<SubtitleTrack> subtitles;
+    List<AudioTrack> audioTracks;
+}
+
+class FileAttachment extends LearningMaterial {
+    String fileUrl;
+    FileType fileType;
+}
+
+class ExternalLink extends LearningMaterial {
+    URL url;
+}
+
+abstract class Assessment {
+    Long id;
+    String title;
+    String description;
+    List<Question> questions;
+    LocalDateTime dueDate;
+}
+
+class Quiz extends Assessment {
+    Duration timeLimit;
+    int maxAttempts;
+}
+
+class Assignment extends Assessment {
+    boolean allowLateSubmission;
+}
+
+class Question {
+    Long id;
+    String text;
+    QuestionType type;
+    Map<String, Boolean> answerOptions; // For MCQs
+    String correctAnswer; // For short answers
+    String sampleSolution; // For coding questions
+}
+
+class User {
+    Long id;
+    String name;
+    String email;
+    Set<Role> roles = EnumSet.of(Role.STUDENT);
+    List<Enrollment> enrollments;
+    List<CourseReview> reviews;
+}
+
+class Instructor {
+    User user;
+    List<Course> publishedCourses;
+    String biography;
+    List<InstructorReview> reviews;
+}
+
+class Enrollment {
+    Course course;
+    User student;
+    LocalDateTime enrollmentDate;
+    CourseProgress progress;
+    Map<Lecture, LectureProgress> lectureProgresses;
+}
+
+class CourseProgress {
+    double completionPercentage;
+    LocalDateTime lastActivityDate;
+    CourseStatus status;
+    
+    void updateProgress() {
+        // Calculate based on lecture progress
+    }
+}
+
+class LectureProgress {
+    Lecture lecture;
+    Duration watchedDuration;
+    LocalDateTime lastWatched;
+    boolean completed;
+    
+    void resume() {
+        // Continue from watchedDuration
+    }
+}
+
+class Review {
+    Long id;
+    String comment;
+    int rating;
+    LocalDateTime createdDate;
+    LocalDateTime updatedDate;
+}
+
+class CourseReview extends Review {
+    Course course;
+}
+
+class InstructorReview extends Review {
+    Instructor instructor;
+}
+
+// Enums
+enum Role { STUDENT, INSTRUCTOR, ADMIN }
+enum CourseLevel { BEGINNER, INTERMEDIATE, ADVANCED }
+enum CourseStatus { ACTIVE, COMPLETED, DROPPED }
+enum FileType { PDF, ZIP, DOCX }
+enum QuestionType { MULTIPLE_CHOICE, TRUE_FALSE, SHORT_ANSWER, CODING }
+enum SubtitleTrack { ENGLISH, SPANISH, FRENCH }
+enum AudioTrack { ENGLISH, SPANISH, FRENCH }
