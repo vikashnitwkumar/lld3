@@ -1,0 +1,156 @@
+class Restaurant {
+    Long id;
+    String name;
+    String address;
+    int rating;
+    int ratingCount;
+    Menu menu;
+    List<Employee> employees;
+    List<Order> orders;
+    OrderService orderService;
+    PaymentService paymentService;
+    EmployeeService employeeService;
+}
+
+class EmployeeService{    
+    void addEmployee(Employee employee);
+    void removeEmployee(Long employeeId);
+}
+
+class Menu {
+    List<Item> items;
+    void addItem(Item item);
+    void removeItem(Long itemId);
+}
+
+
+class Item {
+    Long id;
+    String name;
+    String description;
+    double price;
+    DishType dishType;
+    CuisineType cuisineType;
+    DishSection section;
+    List<Recipe> recipes;
+}
+
+class Ingredient {
+    Long id;
+    String name;
+    IngredientType type;
+    String unit; // grams, ml
+}
+
+
+class Recipe {
+    Item item;
+    Ingredient ingredient;
+    double quantity;
+    String description;
+}
+
+enum DishType { VEG, NON_VEG, VEGAN }
+enum CuisineType { ITALIAN, FRENCH, CHINESE, JAPANESE, INDIAN, CONTINENTAL }
+enum DishSection { BEVERAGE, MAINCOURSE, STARTER, SOUP, APPETIZER }
+enum IngredientType { SOLID, LIQUID, SEMI_LIQUID }
+
+Class Recipe{
+    String Ingredient;
+    double Quantity;
+    IngradientType ingradientType;
+    String discription;
+}
+
+enum IngradientType{
+    LIQUID,
+    SEMI_LIQUID,
+    SOLID
+}
+
+interface Employee {
+    Long id;
+    String name;
+    String email;
+    String phoneNumber;
+}
+
+
+class Chef extends Employee{
+    ChefLevel chefLevel;
+}
+
+enum ChefLevel { COMMIS_CHEF, SOUS_CHEF, HEAD_CHEF, EXECUTIVE_CHEF }
+
+Class Waiter extends Employee{
+    WaiterType waiterType;
+}
+
+enum WaiterType { JUNIOR, SENIOR, MANAGER }
+
+class Customer {
+    Long id;
+    String name;
+    String email;
+    String phoneNumber;
+    List<Visit> visits;
+}
+
+class Visit {
+    Long id;
+    Customer customer;
+    Restaurant restaurant;
+    Date visitDate;
+    List<Order> orders;
+}
+
+
+class Order {
+    Long id;
+    Visit visit;
+    Date orderDate;
+    List<OrderItem> orderItems;
+    OrderStatus status;
+    double totalAmount;
+
+    void updateStatus(OrderStatus newStatus);
+}
+
+
+enum OrderStatus { CONFIRMED, PREPARING, DELIVERED, CANCELLED }
+
+
+class OrderItem {
+    Item item;
+    int quantity;
+    double amount;
+}
+
+
+class Payment {
+    Long id;
+    Order order;
+    Customer customer;
+    double amount;
+    Date paymentDate;
+    PaymentStatus paymentStatus;
+    PaymentGateway paymentGateway;
+    PaymentType paymentType;
+}
+
+enum PaymentStatus { PAID, PROCESSING, FAILED }
+enum PaymentGateway { PHONE_PE, PAYTM, RAZORPAY }
+enum PaymentType { CASH, NET_BANKING, UPI, COUPON, CARD }
+
+class OrderService {
+    List<Item> getAllItems();
+    List<Item> getItemsByCategory(DishSection section);
+    Order createOrder(List<OrderItem> orderItems);
+    Order cancelOrder(Long orderId);
+    Order getOrderDetails(Long orderId);
+}
+
+class PaymentService {
+    Payment makePayment(double amount, Customer customer, Order order, PaymentGateway gateway);
+    Payment refundPayment(Long paymentId);
+}

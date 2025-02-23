@@ -1,0 +1,73 @@
+class App{
+    Attributes:
+        users: List<User> (List of all users in the app)
+        groups: List<Group> (List of all groups in the app)
+
+    methods:
+       login()
+       signUp()
+}
+
+class User{
+    Attributes:
+         id: int
+         name: String
+         userName: String
+         email: String
+         password: String
+         balance: double; //stating amount that it owes or owed (indicating it could be positive or negative)
+         contacts: List<User>; // Users it is in contact with;
+         groups: List<User>; // Groups it's part of
+         transactions: List<Transactions> // transtions the user is part of
+         pendingAmounts : Map<User, double> // which user is owing or being owned the amount.
+
+    Methods:
+        addContact(contact: User): void
+        createGroup(groupName: String, members: List<User>): Group
+        settleUpWith(user: User): void
+        addTransaction(amount: double, participants: User): void
+        updateBalance(amount: double): void
+        removeContact(contact: User) : void //removes the user from your contact list.
+}
+
+class Group{
+    Attributes:
+        groupName: String
+        totalExpense : double // total expense done in this group
+        members: List<User> // members of the group
+        transactions: List<Transaction> // List of all transactions in the group
+        pendingAmounts : Map<User, double> // which user is owing or being owned the amount.
+    Methods:
+        addUser(member: User): void
+        removeUser(member: User): void (Removes a user from the group)
+        settleUser(user: User, amount: double, lender: User) : User, User, double; //owner paying to lender in amount
+        addTransaction(transaction: Transaction): void // Record a transaction in the group
+        calculateBalances(): void (Recalculates balances for all users in the group)
+
+}
+
+Class Transaction{
+    Attributes:
+        amount: double // Amount spent in the transaction
+        description: //description of the Transaction
+        payer: User // The user who paid
+        participants: List<User> // Users who are part of the transaction
+        owedAmounts: Map<User, double> // A map of users and how much they owe for this transaction
+        timeStamp: Date
+    Methods:
+        splitTransactionEqually(): void // Split the transaction amount equally among the participants
+        splitTransactionUnequally(owedAmounts: Map<User, double>): void // Split the transaction amount unequally based on amounts specified
+}
+
+Class Settlement{
+    Attributes:
+        id: int (Unique identifier for the settlement)
+        fromUser: User (User who owes money)
+        toUser: User (User who is owed money)
+        amount: double (Amount to be settled)
+        timestamp: DateTime (Timestamp of the settlement)
+
+    Methods:
+        execute(): void (Executes the settlement and updates user balances)
+
+}
