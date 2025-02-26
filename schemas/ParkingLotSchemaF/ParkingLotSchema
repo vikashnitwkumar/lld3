@@ -1,0 +1,103 @@
+ParkingLot
+    Long id(primary key)
+    String Name
+    String address
+    ENUM status //0-Open, 1-Closed, 2-Filled, 3-Under Maintainance
+    Long currentParkingSpotAssignmentStrategyId (foreign key refers to ParkingSpotAssignmentStrategies table)
+    Long currentPricingStrategyId (foreign key refers to PricingStrategies table)
+Floors
+    Long id(Primary key)
+    String floorNumber
+    Long ParkingLotId (foreign key refers to ParkingLot table)
+    ENUM floorStatus //0-Open, 1-Closed, 3-Filled, 4-Under Maintainance
+
+Gates
+    Long id (primary key)
+    Long ParkingLotId(foreign key refers to ParkingLot table)
+    String gateNumber
+    ENUM gateType //0-Entry, 1-Exit    
+    ENUM gateStatus //0-Open, 1-Closed
+
+Vehicle
+    Long id (primary key)
+    ENUM vehicleType //0-2Wheeler, 1-Car, 2-Truck
+    Long OwnerId (foreign key refers to Customer table)
+    String vehicleNumber
+
+Spot
+    Long id (primary key)
+    String spotNumber
+    Long FloorId (foreign key)
+    Long VehicleTypeId (foreign key)
+    ENUM spotType ////0-2Wheeler, 1-Car, 2-Truck
+    ENUM spotStatus //0-Open, 1-Booked, 2-Not Available
+
+
+User 
+    Long id (primary key)
+    String name
+    String username
+    String password
+    String email
+    ENUM role //0-Customer, 1-Operator, 2-Admin
+    String phoneNumber
+
+Customer
+    Long UserId (PK + foreign key refers to User table)
+    ENUM memberShipType //0-None, 1-Annual, 2-SemiAnnual, 3-Monthly
+    ENUM registrationStatus //0-Pending, 1-Approved, 2-Rejected
+    DateTime registrationDate
+    DateTime expiryDate
+
+Operator 
+    Long gateId (foreign key)// the current gate it's assigned to
+    DateTime startDate
+    DateTime endDate 
+    Long UserId (PK + foreign key refers to User Table)
+    ENUM operatorStatus //0-Working, 1-Not Working
+
+Ticket
+    Long id (primary key)
+    Long SpotId (foreign key)
+    Long VehicleId (foreign key)
+    Long OperatorId (foreign key)
+    Long CustomerId (foreign key)
+    // Long ParkingLotId (foreign key)
+    Long GateId (foreign key to Gates Table) // entry gate
+    DateTime entryTime
+
+Bill
+    Long id(primary key)
+    Long TicketId (foreign key)
+    DateTime exitTime
+    Decimal amount
+    Long gateId(foreign key) //exit gate
+    Long OperatorId (foreign key refers to Operator Table)
+    
+ParkingSpotAssignmentStrategies
+    Long id (primary key)
+    ENUM strategy //0-First Come First Serve, 1-Shortest Waiting Time
+    String Name
+    String Description
+    Long parkingLotId( foreign key refers to ParkingLot table) 
+
+Payment
+    Long id (primary key)
+    Long BillId (foreign key)
+    Decimal amount
+    DateTime paymentDate
+    ENUM paymentStatus //0-Pending, 1-Completed, 2-Failed
+    ENUM paymentGateway //0-NULL, 1-Paytm, 2-RazorPay, 3-PhonePe
+    ENUM paymentType //0-Cash, 1-Net Banking, 2-UPI, 3-Coupon, 4-Card
+
+PricingStrategies
+    Long id (primary key)
+    String Name
+    String Description
+    Long ParkingLotId (foreign key refers to ParkingLot table)
+    ENUM vehicleType //0-2Wheeler, 1-Car, 2-Truck
+    int hourSpentStart
+    int hourSpentEnd
+    Decimal price
+    BOOLEAN isActive  // Helps activate/deactivate a pricing rule
+    INT priorityLevel // Allows tiered pricing (e.g., VIP discounts, event-based pricing)
