@@ -1,0 +1,93 @@
+
+Resturant
+    Long Id
+    String resturantName
+    String address
+    int rating
+    Long ratingCount
+
+Menu
+    Long Id
+    Long resturantId(FK refeces to Resturant)
+    menu_type ENUM //('REGULAR', 'SEASONAL', 'SPECIAL'
+    
+DishSection 
+    Long Id
+    String sectionName
+    String description
+    Long menuId(FK refeces to Menu) 
+
+
+Dish
+    Long id
+    String itemName
+    Double price
+    String description
+    ENUM dishType // veg, non-veg, vegan
+    Long dishSectionId(FK refeces to CuisineSection)
+    ENUM cuisineType // Italian, French, Chinese, Japanese, Indian, Continental
+
+DishIngredient
+    Long id
+    Long dishId(FK refeces to Dish)
+    Long ingredientId(FK refeces to Ingredient)
+    String description
+    Decimal quantity
+    ENUM quantityUnit //g, ml, tsp
+
+Ingredient
+    Long id
+    String name
+    String description
+
+User
+    Long Id
+    String name
+    String userName
+    String password
+    Enum role {waiter, chef}
+
+
+Waiter
+    Long Id(pk + fk refeces to User)
+    ENUM waiterLevel // Junior, Senior, Manager
+
+Chef
+    Long Id(pk + fk refeces to User)
+    ENUM chefLevel // Junior, Senior, Manager
+
+Customer
+    Long Id
+    String name
+    String address
+
+CustomerVisit
+    Long Id
+    Long customerId(FK refeces to Customer)
+    Long resturantId(FK refeces to Resturant)
+    DateTime visitDate
+
+Order
+    Long Id
+    Long customerVisitId(FK refeces to CustomerVisit)
+    -- Long waiterId(FK refeces to Waiter)
+    -- Long chefId(FK refeces to Chef)
+    DateTime orderDate
+    Double orderTotal
+
+OrderItem
+    Long Id
+    Long orderId(FK refeces to Order)
+    Long dishId(FK refeces to Dish)
+    Long quantity
+    Double orderAmount // price * quantity will be useful for historical data analysis
+
+Payment
+    Long Id
+    Long customerVisitId(FK refeces to CustomerVisit)
+    DateTime paymentDate
+    Double amount
+    ENUM paymentMethod // cash, card, online
+    ENUM paymentStatus // pending, completed, failed
+    ENUM paymentType // regular, refund
+    ENUM paymentGateway // stripe, paypal, phonepe, razorpay
