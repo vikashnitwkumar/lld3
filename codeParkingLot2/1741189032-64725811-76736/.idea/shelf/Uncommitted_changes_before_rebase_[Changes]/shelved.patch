@@ -1,0 +1,19 @@
+Index: src/main/java/com/scaler/repositories/InMemoryOrderRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.scaler.repositories;\r\n\r\nimport com.scaler.models.Order;\r\nimport org.hibernate.mapping.Collection;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\nimport java.util.stream.Collectors;\r\n\r\npublic class InMemoryOrderRepository implements OrderRepository {\r\n    Map<Long, Order> orderMap;\r\n\r\n    public InMemoryOrderRepository(Map<Long, Order> orderMap) {\r\n        this.orderMap = orderMap;\r\n    }\r\n    public InMemoryOrderRepository() {\r\n            this.orderMap = new HashMap<>();\r\n        }\r\n\r\n    @Override\r\n    public Order save(Order order) {\r\n        if(order.getId() == 0) order.setId(orderMap.size()+1);\r\n        return orderMap.put(order.getId(), order);\r\n    }\r\n\r\n    @Override\r\n    public List<Order> findOrdersByCustomerSession(long customerSessionId) {\r\n         return orderMap.\r\n                values().\r\n                stream().\r\n                filter(\r\n                        order -> order.getCustomerSession() != null &&\r\n                        order.getCustomerSession().getId() == customerSessionId\r\n                ).\r\n                 collect(Collectors.toList());\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/scaler/repositories/InMemoryOrderRepository.java b/src/main/java/com/scaler/repositories/InMemoryOrderRepository.java
+--- a/src/main/java/com/scaler/repositories/InMemoryOrderRepository.java	(revision a7d2fd6c429d02743cc943a77da5e01e56f75ef4)
++++ b/src/main/java/com/scaler/repositories/InMemoryOrderRepository.java	(date 1741208889493)
+@@ -33,7 +33,6 @@
+                 filter(
+                         order -> order.getCustomerSession() != null &&
+                         order.getCustomerSession().getId() == customerSessionId
+-                ).
+-                 collect(Collectors.toList());
++                ).toList();
+     }
+ }
