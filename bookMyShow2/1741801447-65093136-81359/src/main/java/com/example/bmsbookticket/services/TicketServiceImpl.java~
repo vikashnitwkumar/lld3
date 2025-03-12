@@ -1,0 +1,33 @@
+package com.example.bmsbookticket.services;
+
+import com.example.bmsbookticket.models.*;
+import com.example.bmsbookticket.repositories.SeatsRepository;
+import com.example.bmsbookticket.repositories.ShowSeatRepository;
+import com.example.bmsbookticket.repositories.UserRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class TicketServiceImpl implements TicketService{
+    ShowSeatRepository showSeatRepository;
+    UserRepository userRepository;
+    SeatsRepository seatsRepository;
+
+    @Override
+    public Ticket bookTicket(List<Integer> showSeatIds, int userId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("User not found"));
+        List<Integer> unAvailableSeatsIds = new ArrayList<>();
+        List<ShowSeat> showSeatList = new ArrayList<>();
+        for (Integer showSeatId : showSeatIds) {
+            ShowSeat showSeat = showSeatRepository.findById(showSeatId).orElseThrow(() -> new Exception("Show seat not found"));
+            if (showSeat.getStatus() == SeatStatus.AVAILABLE) {
+                showSeat.setStatus(SeatStatus.BLOCKED);
+                showSeatList.add(showSeat);
+            } else {
+                unAvailableSeatsIds.add(showSeat.getSeat().getId());
+            }
+        }
+    }
+}
